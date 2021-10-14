@@ -3,7 +3,9 @@
     <nuxt-link class="logo" to="/"
       ><img src="~/assets/logo.png" alt="LOGO"
     /></nuxt-link>
-    <div class="title">Default Title Second Line</div>
+    <div class="title">
+      Formulatire d’Identification des Risques Opérationnels
+    </div>
     <div class="nav"></div>
     <div class="content">
       <nuxt />
