@@ -1,0 +1,40 @@
+version: '3.3'
+
+services:
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    user: vscode
+    init: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker-host.sock 
+      - ..:/RiskManagement:cached
+      - $USER_SECRET_PATH:/home/vscode/.microsoft/usersecrets
+      - vscode:/home/vscode/.vscode
+    # entrypoint: /usr/local/share/docker-init.sh
+    command: sleep infinity
+    env_file: .env
+    links: 
+      - db
+  db:
+    image: mcr.microsoft.com/mssql/server:latest
+    volumes:
+      - db:/var/opt/mssql
+    expose:
+      - 1433
+    ports:
+      - '1433:1433'
+    environment:
+      LANG: C.UTF-8
+      ACCEPT_EULA: 'Y'
+      MSSQL_PID: 'Express'
+  db_portal:
+    image: adminer:latest
+    links: 
+      - db
+    ports:
+      - '8080:8080'
+volumes:
+  db:
+  vscode:
