@@ -1,0 +1,16 @@
+using RiskManagement.Enums;
+
+namespace RiskManagement.Dtos
+{
+  public class EvaluationResiduelDto
+  {
+    public EEfficency ControlLevelEfficency { get; set; }
+    public string ControlLevelDescription { get; set; }
+    public EEfficency ControlAutoEfficency { get; set; }
+    public string ControlAutoDescription { get; set; }
+    public EEfficency ProcedureCircularEfficency { get; set; }
+    public string ProcedureCircularDescription { get; set; }
+    public EEfficency SensibilisationFormationEfficency { get; set; }
+    public string SensibilisationFormationDescription { get; set; }
+  }
+}

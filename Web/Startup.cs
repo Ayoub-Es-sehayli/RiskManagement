@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,11 +28,30 @@ namespace RiskManagement.Api
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      services.AddControllers();
+      #region DbContext
+      var config = Configuration.GetSection("SqlServerConnection").Get<ConnectionConfig>();
+      var builder = new SqlConnectionStringBuilder();
+      builder.Password = config.Password;
+      builder.DataSource = config.Server;
+      builder.InitialCatalog = config.Database;
+      builder.UserID = config.User;
+      services.AddPooledDbContextFactory<Models.RiskAppContext>(
+        options => options.UseSqlServer(builder.ConnectionString)
+      );
+      #endregion
 
       services.AddControllers();
       services.AddSwaggerGen(c =>
+      services.AddAutoMapper(cfg =>
       {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "RiskManagement.Api", Version = "v1" });
+        cfg.AddProfile<Profiles.CommentsProfile>();
+        cfg.AddProfile<Profiles.ImpactedEntityProfile>();
+        cfg.AddProfile<Profiles.IdentificationProfile>();
+        cfg.AddProfile<Profiles.EvaluationInherentProfile>();
+        cfg.AddProfile<Profiles.EvaluationResiduelProfile>();
+        cfg.AddProfile<Profiles.EvaluationDispositifProfile>();
+        cfg.AddProfile<Profiles.RiskProfile>();
       });
     }
 
