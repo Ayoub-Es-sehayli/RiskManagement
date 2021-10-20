@@ -12,18 +12,24 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
+using HotChocolate;
+using GraphQL.Server.Ui.Voyager;
+using RiskManagement.Services.MacroProcesses;
+using RiskManagement.Services.Processes;
+using RiskManagement.Services.Risks;
 
 namespace RiskManagement.Api
 {
   public class Startup
   {
-    public Startup(IConfiguration configuration)
+    public Startup(IConfiguration configuration, IWebHostEnvironment env)
     {
       Configuration = configuration;
+      _env = env;
     }
 
     public IConfiguration Configuration { get; }
+    private readonly IWebHostEnvironment _env;
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
