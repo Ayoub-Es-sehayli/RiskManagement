@@ -41,8 +41,18 @@ namespace RiskManagement.Api
       );
       #endregion
 
-      services.AddControllers();
-      services.AddSwaggerGen(c =>
+      #region GraphQl
+      services.AddGraphQLServer()
+        .AddQueryType<Services.Query>()
+        .AddMutationType<Services.Mutation>()
+        .AddType<RiskType>()
+        .AddType<ProcessType>()
+        .AddType<MacroProcessType>()
+        .AddFiltering()
+        .AddSorting()
+        .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = _env.IsDevelopment());
+      #endregion
+
       services.AddAutoMapper(cfg =>
       {
         cfg.AddProfile<Profiles.CommentsProfile>();
@@ -61,8 +71,6 @@ namespace RiskManagement.Api
       if (env.IsDevelopment())
       {
         app.UseDeveloperExceptionPage();
-        app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "RiskManagement.Api v1"));
       }
 
       app.UseRouting();
@@ -71,7 +79,13 @@ namespace RiskManagement.Api
 
       app.UseEndpoints(endpoints =>
       {
+        endpoints.MapGraphQL();
         endpoints.MapControllers();
+      });
+
+      app.UseGraphQLVoyager(new VoyagerOptions
+      {
+        GraphQLEndPoint = "/graphql"
       });
     }
   }
