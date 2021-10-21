@@ -7,7 +7,15 @@
       <b-input v-model="identification.riskCause" />
     </b-field>
     <b-field label="Processus" class="process">
-      <b-select v-model="identification.process" expanded></b-select>
+      <b-select v-model="identification.process" expanded>
+        <option
+          v-for="process in processes"
+          :key="process.id"
+          :value="process.id"
+        >
+          {{ process.name }}
+        </option>
+      </b-select>
     </b-field>
     <b-field label="Marco-Processus" class="macro-process">
       <b-input disabled v-model="MacroProcess" />
@@ -25,6 +33,10 @@
         <b-taginput
           :data="filteredEntities"
           v-model="identification.impactedEntities"
+          :open-on-focus="true"
+          :autocomplete="true"
+          :allow-new="false"
+          :allow-duplicates="false"
           field="name"
           icon="label"
           @typing="getFilteredEntities"
@@ -107,6 +119,14 @@ export default class RiskIdentificationStep extends Vue {
     });
   }
 
+  get MacroProcess() {
+    return this.processes.find((p) => p.id == this.identification.process)
+      ?.macroProcess.name;
+  }
+  get Domain() {
+    return this.processes.find((p) => p.id == this.identification.process)
+      ?.macroProcess.domain.name;
+  }
 }
 </script>
 <style scoped>

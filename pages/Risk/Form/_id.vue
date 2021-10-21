@@ -55,7 +55,9 @@ import { Component, Vue } from "vue-property-decorator";
 import { getModule } from "vuex-module-decorators";
 import { store } from "@/store/index";
 import RiskModule from "@/store/riskModule";
-import RiskFormVM from "@/types/RiskFormVM";
+import RiskFormVM, { CauseVM, ImpactedEntityVM } from "@/types/RiskFormVM";
+import UiModule from "~/store/uiModule";
+import ProcessVM from "~/types/ProcessVM";
 
 @Component
 export default class RiskForm extends Vue {
@@ -152,7 +154,20 @@ export default class RiskForm extends Vue {
     EDmrTypology.Curative,
   ];
   async beforeCreate() {
+    this.uiModule = getModule(UiModule, store);
     this.riskModule = getModule(RiskModule, store);
+
+    let response = await this.$apollo.query({
+      query: getProcesses,
+    });
+
+    this.processes = response.data.process;
+
+    response = await this.$apollo.query({
+      query: getEntities,
+    });
+
+    this.entities = response.data.entity;
   }
 
   async nextAction(next: any) {

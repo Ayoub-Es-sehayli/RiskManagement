@@ -1,0 +1,14 @@
+{
+  process(order: {
+    name: ASC
+  }) {
+    id
+    name
+    macroProcess {
+      name
+      domain {
+        name
+      }
+    }
+  }
+}
