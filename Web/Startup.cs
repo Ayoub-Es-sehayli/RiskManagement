@@ -34,6 +34,9 @@ namespace RiskManagement.Api
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      services.AddCors(options =>
+        options.AddDefaultPolicy(config => config.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod())
+      );
       services.AddControllers();
       #region DbContext
       var config = Configuration.GetSection("SqlServerConnection").Get<ConnectionConfig>();
@@ -78,7 +81,7 @@ namespace RiskManagement.Api
       {
         app.UseDeveloperExceptionPage();
       }
-
+      app.UseCors();
       app.UseRouting();
 
       app.UseAuthorization();

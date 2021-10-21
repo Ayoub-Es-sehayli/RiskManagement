@@ -1,24 +1,28 @@
 <template>
   <b-steps animated rounded class="form-steps" v-model="currentStep">
     <b-step-item step="1" label="Identification">
-      <risk-identification-step :identification="risk.identification" />
+      <risk-identification-step
+        :identification="risk.identification"
+        :processes="processes"
+        :entities="entities"
+      />
     </b-step-item>
     <b-step-item step="2" label="Évaluation Inhérente">
       <risk-evaluation-inherent-step
-        :evaluation="risk.evaluation_inherent"
+        :evaluation="risk.evaluationInherent"
         @comment-on="storeComment"
       />
     </b-step-item>
     <b-step-item step="3" label="Évaluation Résiduel">
       <risk-evaluation-residuel-step
-        :evaluation="risk.evaluation_residuel"
-        :dmr-global.sync="risk.evaluation_dispositif.dmr_global"
+        :evaluation="risk.evaluationResiduel"
+        :dmr-global.sync="risk.evaluationDispositif.dmrGlobal"
       />
     </b-step-item>
     <b-step-item step="4" label="Dispositif des Risques DMR">
       <risk-evaluation-dispositif-step
-        :evaluation="risk.evaluation_dispositif"
-        :rating-raw="risk.evaluation_inherent.rating_raw"
+        :evaluation="risk.evaluationDispositif"
+        :rating-raw="risk.evaluationInherent.ratingRaw"
       />
     </b-step-item>
 
@@ -34,13 +38,13 @@
           Précedent
         </b-button>
         <b-button
-          icon-right="chevron-right"
+          :icon-right="next.disabled ? 'content-save-outline' : 'chevron-right'"
           @click.prevent="nextAction(next)"
           class="next-btn is-success"
           outlined
-          :type="next.disabled ? 'submit' : 'button'"
+          type="button"
         >
-          Suivant
+          {{ next.disabled ? "Confirmer" : "Suivant" }}
         </b-button>
       </div>
     </template>
@@ -62,53 +66,91 @@ export default class RiskForm extends Vue {
       riskCause: "",
       process: 1,
       description: "",
-      impacts_others: false,
-      impacted_entities: [],
+      impactsOthers: false,
+      impactedEntities: [],
       causes: [{ cause: "" }],
     },
-    evaluation_inherent: {
+    evaluationInherent: {
       frequency: 1,
-      impact_raw: 1,
-      rating_raw: 1,
-      can_profit: false,
-      impact_regulatory: false,
-      impact_legal: false,
-      impact_image_risk: false,
-      impact_insatisfaction: false,
-      impact_credit_risk: false,
-      impact_market_risk: false,
-      impact_process_interrupted: false,
-      impact_other: false,
+      impactRaw: 1,
+      ratingRaw: 1,
+      canProfit: false,
+      impactRegulatory: false,
+      impactLegal: false,
+      impactImageRisk: false,
+      impactInsatisfaction: false,
+      impactCreditRisk: false,
+      impactMarketRisk: false,
+      impactProcessInterrupted: false,
+      impactOther: false,
       comments: {
-        can_profit: "",
-        impact_regulatory: "",
-        impact_legal: "",
-        impact_image_risk: "",
-        impact_insatisfaction: "",
-        impact_credit_risk: "",
-        impact_market_risk: "",
-        impact_process_interrupted: "",
-        impacts_other: "",
+        canProfit: "",
+        impactRegulatory: "",
+        impactLegal: "",
+        impactImageRisk: "",
+        impactInsatisfaction: "",
+        impactCreditRisk: "",
+        impactMarketRisk: "",
+        impactProcessInterrupted: "",
+        impactOther: "",
       },
     },
-    evaluation_residuel: {
-      control_levels_efficency: 0,
-      control_levels_description: "",
-      control_auto_efficency: 0,
-      control_auto_description: "",
-      procedure_circular_efficency: 0,
-      procedure_circular_description: "",
-      sensibilisation_formation_efficency: 0,
-      sensibilisation_formation_description: "",
+    evaluationResiduel: {
+      controlLevelEfficency: 0,
+      controlLevelsDescription: "",
+      controlAutoEfficency: 0,
+      controlAutoDescription: "",
+      procedureCircularEfficency: 0,
+      procedureCircularDescription: "",
+      sensibilisationFormationEfficency: 0,
+      sensibilisationFormationDescription: "",
     },
-    evaluation_dispositif: {
-      dmr_global: 0,
-      dmr_typology: 0,
-      rating_net: 1,
+    evaluationDispositif: {
+      dmrGlobal: 0,
+      dmrTypology: 0,
+      ratingNet: 1,
       comment: "",
     },
   };
-  currentStep: number = 1;
+  processes: ProcessVM[] = [];
+  entities: ImpactedEntityVM[] = [];
+  currentStep: number = 0;
+
+  efficencyValues: string[] = [
+    EEfficency.NotApplicable,
+    EEfficency.Inexistant,
+    EEfficency.Inefficient,
+    EEfficency.Insuffisant,
+    EEfficency.Average,
+    EEfficency.Efficient,
+  ];
+  frequencyValues: string[] = [
+    EFrequency.ExtremelyRare,
+    EFrequency.Rare,
+    EFrequency.Infrequent,
+    EFrequency.Frequent,
+    EFrequency.VeryFrequent,
+    EFrequency.Permanent,
+  ];
+  impactValues: string[] = [
+    EImpactRating.Insignificant,
+    EImpactRating.Low,
+    EImpactRating.Average,
+    EImpactRating.High,
+    EImpactRating.VeryHigh,
+    EImpactRating.Severe,
+  ];
+  ratingValues: string[] = [
+    ERiskRating.Low,
+    ERiskRating.Average,
+    ERiskRating.Strong,
+    ERiskRating.Critical,
+    ERiskRating.Inacceptable,
+  ];
+  dmrTypologyValues: string[] = [
+    EDmrTypology.Preventive,
+    EDmrTypology.Curative,
+  ];
   async beforeCreate() {
     this.riskModule = getModule(RiskModule, store);
   }
@@ -129,8 +171,8 @@ export default class RiskForm extends Vue {
 
   storeComment(payload: { impact: string; comment: string }) {
     this.riskModule.CommentOn(payload);
-    this.risk.evaluation_inherent.comments =
-      this.riskModule.currentRisk!!.evaluation_inherent.comments;
+    this.risk.evaluationInherent.comments =
+      this.riskModule.currentRisk!!.evaluationInherent.comments;
   }
 }
 </script>

@@ -21,9 +21,9 @@
         </option>
       </b-select>
     </b-field>
-    <b-field class="impact_raw" label="Impact Brut">
+    <b-field class="impactRaw" label="Impact Brut">
       <b-select
-        v-model="evaluation.impact_raw"
+        v-model="evaluation.impactRaw"
         placeholder="Quel niveau d'impact ce risque peut-il avoir?"
       >
         <option :value="0">Non significatif</option>
@@ -34,124 +34,124 @@
         <option :value="5">Sévère</option>
       </b-select>
     </b-field>
-    <b-field class="rating_raw" label="Cotations du risque brut">
+    <b-field class="ratingRaw" label="Cotations du risque brut">
       <b-button expanded :type="ratingType" size="is-medium">{{
         ratingText
       }}</b-button>
     </b-field>
     <h4 class="impact_title">Impacts</h4>
     <div class="impacts">
-      <b-field class="can_profit" grouped label="Manque à gagner">
-        <b-select v-model="evaluation.can_profit">
+      <b-field class="canProfit" grouped label="Manque à gagner">
+        <b-select v-model="evaluation.canProfit">
           <option :value="true">Oui</option>
           <option :value="false">Non</option>
         </b-select>
         <b-button
           class="control"
           icon-right="comment-text-multiple-outline"
-          @click="commentOnImpact('can_profit')"
+          @click="commentOnImpact('canProfit')"
         >
           Commenter
         </b-button>
       </b-field>
       <b-field
-        class="impact_regulatory"
+        class="impactRegulatory"
         grouped
         label="Réglementaire (ex : Pénalités, retraits, d’agréments)"
-        ><b-select v-model="evaluation.impact_regulatory">
+        ><b-select v-model="evaluation.impactRegulatory">
           <option :value="true">Oui</option>
           <option :value="false">Non</option>
         </b-select>
         <b-button
           class="control"
           icon-right="comment-text-multiple-outline"
-          @click="commentOnImpact('impact_regulatory')"
+          @click="commentOnImpact('impactRegulatory')"
         >
           Commenter
         </b-button>
       </b-field>
-      <b-field class="impact_legal" grouped label="Juridique/Humain & Social"
-        ><b-select v-model="evaluation.impact_legal">
+      <b-field class="impactLegal" grouped label="Juridique/Humain & Social"
+        ><b-select v-model="evaluation.impactLegal">
           <option :value="true">Oui</option>
           <option :value="false">Non</option>
         </b-select>
         <b-button
           class="control"
           icon-right="comment-text-multiple-outline"
-          @click="commentOnImpact('impact_legal')"
+          @click="commentOnImpact('impactLegal')"
         >
           Commenter
         </b-button>
       </b-field>
       <b-field
-        class="impact_image_risk"
+        class="impactImageRisk"
         grouped
         label="Risque d’image (ex : Impact médiatique)"
-        ><b-select v-model="evaluation.impact_image_risk">
+        ><b-select v-model="evaluation.impactImageRisk">
           <option :value="true">Oui</option>
           <option :value="false">Non</option>
         </b-select>
         <b-button
           class="control"
           icon-right="comment-text-multiple-outline"
-          @click="commentOnImpact('impact_image_risk')"
+          @click="commentOnImpact('impactImageRisk')"
         >
           Commenter
         </b-button>
       </b-field>
       <b-field
-        class="impact_insatisfaction"
+        class="impactInsatisfaction"
         grouped
         label="Insatisfaction (ex : Dégradation service client)"
-        ><b-select v-model="evaluation.impact_insatisfaction">
+        ><b-select v-model="evaluation.impactInsatisfaction">
           <option :value="true">Oui</option>
           <option :value="false">Non</option>
         </b-select>
         <b-button
           class="control"
           icon-right="comment-text-multiple-outline"
-          @click="commentOnImpact('impact_insatisfaction')"
+          @click="commentOnImpact('impactInsatisfaction')"
         >
           Commenter
         </b-button>
       </b-field>
       <b-field
-        class="impact_credit_risk"
+        class="impactCreditRisk"
         grouped
         label="Impact risque de crédit (ex : Probabilité défaut et risque de défaut)"
-        ><b-select v-model="evaluation.impact_credit_risk">
+        ><b-select v-model="evaluation.impactCreditRisk">
           <option :value="true">Oui</option>
           <option :value="false">Non</option>
         </b-select>
         <b-button
           class="control"
           icon-right="comment-text-multiple-outline"
-          @click="commentOnImpact('impact_credit_risk')"
+          @click="commentOnImpact('impactCreditRisk')"
         >
           Commenter
         </b-button>
       </b-field>
       <b-field
-        class="impact_market_risk"
+        class="impactMarketRisk"
         grouped
         label="Impact risque de marché (ex : Augmentation de la volatilité et exposition)"
-        ><b-select v-model="evaluation.impact_market_risk">
+        ><b-select v-model="evaluation.impactMarketRisk">
           <option :value="true">Oui</option>
           <option :value="false">Non</option>
         </b-select>
         <b-button
           class="control"
           icon-right="comment-text-multiple-outline"
-          @click="commentOnImpact('impact_market_risk')"
+          @click="commentOnImpact('impactMarketRisk')"
         >
           Commenter
         </b-button>
       </b-field>
       <b-field
-        class="impact_process_interrupted"
+        class="impactProcessInterrupted"
         grouped
         label="Interruption de processus (ex : Déroulement du processus stoppé)"
-        ><b-select v-model="evaluation.impact_process_interrupted">
+        ><b-select v-model="evaluation.impactProcessInterrupted">
           <option :value="true">Oui</option>
           <option :value="false">Non</option>
         </b-select>
@@ -163,15 +163,15 @@
           Commenter
         </b-button>
       </b-field>
-      <b-field class="impact_other" grouped label="Autre"
-        ><b-select v-model="evaluation.impact_other">
+      <b-field class="impactOther" grouped label="Autre"
+        ><b-select v-model="evaluation.impactOther">
           <option :value="true">Oui</option>
           <option :value="false">Non</option>
         </b-select>
         <b-button
           class="control"
           icon-right="comment-text-multiple-outline"
-          @click="commentOnImpact('impact_other')"
+          @click="commentOnImpact('impactOther')"
         >
           Commenter
         </b-button>
@@ -202,6 +202,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { EvaluationInherentVM } from "@/types/RiskFormVM";
+import { EFrequency, EImpactRating } from "~/types/types";
 
 @Component
 export default class RiskEvaluationInherentStep extends Vue {
@@ -243,9 +244,9 @@ export default class RiskEvaluationInherentStep extends Vue {
     this.$emit("comment-on", payload);
   }
   get calculatedRating() {
-    this.evaluation.rating_raw =
-      this.ratingMatrix[this.evaluation.impact_raw][this.evaluation.frequency];
-    return this.evaluation.rating_raw;
+    this.evaluation.ratingRaw =
+      this.ratingMatrix[this.evaluation.impactRaw][this.evaluation.frequency];
+    return this.evaluation.ratingRaw;
   }
 
   get ratingText() {
@@ -268,8 +269,8 @@ export default class RiskEvaluationInherentStep extends Vue {
   grid-template-areas:
     "impact_title impact_title"
     "impacts impacts"
-    "frequency impact_raw"
-    "rating_raw rating_raw"
+    "frequency impactRaw"
+    "ratingRaw ratingRaw"
     "actions actions";
   justify-items: center;
 }
@@ -278,16 +279,16 @@ export default class RiskEvaluationInherentStep extends Vue {
   grid-area: impact_title;
 }
 
-.rating_raw {
-  grid-area: rating_raw;
+.ratingRaw {
+  grid-area: ratingRaw;
 }
 
 .frequency {
   grid-area: frequency;
 }
 
-.impact_raw {
-  grid-area: impact_raw;
+.impactRaw {
+  grid-area: impactRaw;
 }
 
 .impacts {
@@ -296,49 +297,49 @@ export default class RiskEvaluationInherentStep extends Vue {
   grid-area: impacts;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 15px;
   gap: 5% 1%;
   grid-auto-flow: row;
   grid-template-areas:
-    "can_profit impact_regulatory impact_legal"
-    "impact_image_risk impact_insatisfaction impact_credit_risk"
-    "impact_market_risk impact_process_interrupted impact_other";
+    "canProfit impactRegulatory impactLegal"
+    "impactImageRisk impactInsatisfaction impactCreditRisk"
+    "impactMarketRisk impactProcessInterrupted impactOther";
 }
 
-.can_profit {
-  grid-area: can_profit;
+.canProfit {
+  grid-area: canProfit;
 }
 
-.impact_regulatory {
-  grid-area: impact_regulatory;
+.impactRegulatory {
+  grid-area: impactRegulatory;
 }
 
-.impact_legal {
-  grid-area: impact_legal;
+.impactLegal {
+  grid-area: impactLegal;
 }
 
-.impact_image_risk {
-  grid-area: impact_image_risk;
+.impactImageRisk {
+  grid-area: impactImageRisk;
 }
 
-.impact_insatisfaction {
-  grid-area: impact_insatisfaction;
+.impactInsatisfaction {
+  grid-area: impactInsatisfaction;
 }
 
-.impact_credit_risk {
-  grid-area: impact_credit_risk;
+.impactCreditRisk {
+  grid-area: impactCreditRisk;
 }
 
-.impact_market_risk {
-  grid-area: impact_market_risk;
+.impactMarketRisk {
+  grid-area: impactMarketRisk;
 }
 
-.impact_process_interrupted {
-  grid-area: impact_process_interrupted;
+.impactProcessInterrupted {
+  grid-area: impactProcessInterrupted;
 }
 
-.impact_other {
-  grid-area: impact_other;
+.impactOther {
+  grid-area: impactOther;
 }
 .is-orange {
   background-color: rgb(255, 83, 20);
