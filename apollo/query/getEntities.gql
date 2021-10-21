@@ -1,0 +1,10 @@
+{
+  entity (
+    order: {
+      name: ASC
+    }
+  ) {
+    id
+    name
+  }
+}

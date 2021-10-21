@@ -22,5 +22,13 @@ namespace RiskManagement.Services
     {
       return context.Processes;
     }
+
+    [UseDbContext(typeof(RiskAppContext))]
+    [UseFiltering]
+    [UseSorting]
+    public IQueryable<Entity> GetEntity([ScopedService] RiskAppContext context)
+    {
+      return context.Entities;
+    }
   }
 }

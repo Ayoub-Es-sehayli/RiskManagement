@@ -1,20 +1,20 @@
 <template>
   <div class="form">
-    <div class="dmr_global">
+    <div class="dmrGlobal">
       <b-field label="Efficacité Globale DMR">
         <b-button expanded size="is-large" :type="dmrType">{{
           dmrText
         }}</b-button>
       </b-field>
     </div>
-    <div class="rating_net">
+    <div class="ratingNet">
       <b-field label="Cotations du Risque Net">
         <b-button expanded size="is-large" :type="ratingType">{{
           ratingText
         }}</b-button>
       </b-field>
     </div>
-    <div class="dmr_typology">
+    <div class="dmrTypology">
       <b-field label="Définir la Typologie DMR">
         <b-select>
           <option :value="0">DMR à dominance préventive</option>
@@ -24,7 +24,12 @@
     </div>
     <div class="comments">
       <b-field label="Commentaire">
-        <b-input type="textarea" maxlength="200" expanded />
+        <b-input
+          type="textarea"
+          maxlength="200"
+          expanded
+          v-model="evaluation.comment"
+        />
       </b-field>
     </div>
   </div>
@@ -74,19 +79,19 @@ export default class RiskEvaluationDispositifStep extends Vue {
   get calculateRatingNet() {
     let modifier = 0;
 
-    if (this.evaluation.dmr_global > 2) {
-      modifier = this.evaluation.dmr_global - 2;
+    if (this.evaluation.dmrGlobal > 2) {
+      modifier = this.evaluation.dmrGlobal - 2;
     }
 
     return Math.max(0, this.ratingRaw - modifier);
   }
 
   get dmrText() {
-    return this.dmrLabels[Math.max(0, this.evaluation.dmr_global - 1)];
+    return this.dmrLabels[Math.max(0, this.evaluation.dmrGlobal - 1)];
   }
 
   get dmrType() {
-    return this.dmrStyles[Math.max(0, this.evaluation.dmr_global - 1)];
+    return this.dmrStyles[Math.max(0, this.evaluation.dmrGlobal - 1)];
   }
   get ratingText() {
     return this.ratingLabels[this.calculateRatingNet];
@@ -106,19 +111,19 @@ export default class RiskEvaluationDispositifStep extends Vue {
   gap: 0px 0px;
   grid-auto-flow: row;
   grid-template-areas:
-    "dmr_typology dmr_global"
-    "comments rating_net";
+    "dmrTypology dmrGlobal"
+    "comments ratingNet";
 }
 
-.dmr_global {
+.dmrGlobal {
   justify-self: center;
   align-self: center;
-  grid-area: dmr_global;
+  grid-area: dmrGlobal;
 }
 
-.dmr_typology {
+.dmrTypology {
   align-self: center;
-  grid-area: dmr_typology;
+  grid-area: dmrTypology;
 }
 
 .comments {
@@ -126,10 +131,10 @@ export default class RiskEvaluationDispositifStep extends Vue {
   grid-area: comments;
 }
 
-.rating_net {
+.ratingNet {
   justify-self: center;
   align-self: center;
-  grid-area: rating_net;
+  grid-area: ratingNet;
 }
 .is-orange {
   background-color: rgb(255, 83, 20);

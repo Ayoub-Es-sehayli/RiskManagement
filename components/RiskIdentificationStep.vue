@@ -7,25 +7,39 @@
       <b-input v-model="identification.riskCause" />
     </b-field>
     <b-field label="Processus" class="process">
-      <b-select v-model="identification.process" expanded></b-select>
+      <b-select v-model="identification.process" expanded>
+        <option
+          v-for="process in processes"
+          :key="process.id"
+          :value="process.id"
+        >
+          {{ process.name }}
+        </option>
+      </b-select>
     </b-field>
     <b-field label="Marco-Processus" class="macro-process">
-      <b-input disabled />
+      <b-input disabled v-model="MacroProcess" />
     </b-field>
     <b-field label="Domaine" class="domain">
-      <b-input disabled />
+      <b-input disabled v-model="Domain" />
     </b-field>
     <div class="impacts-others">
       <b-field class="impact_switch">
-        <b-switch v-model="identification.impacts_others">
+        <b-switch v-model="identification.impactsOthers">
           Impacts sur d'autre entité
         </b-switch>
       </b-field>
-      <b-field class="entities" v-if="identification.impacts_others">
+      <b-field class="entities" v-if="identification.impactsOthers">
         <b-taginput
-          v-model="identification.impacted_entities"
-          field="entity.name"
+          :data="filteredEntities"
+          v-model="identification.impactedEntities"
+          :open-on-focus="true"
+          :autocomplete="true"
+          :allow-new="false"
+          :allow-duplicates="false"
+          field="name"
           icon="label"
+          @typing="getFilteredEntities"
         />
       </b-field>
     </div>
@@ -55,13 +69,25 @@
 </template>
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { IdentificationVM } from "~/types/RiskFormVM";
+import ProcessVM from "~/types/ProcessVM";
+import { IdentificationVM, ImpactedEntityVM } from "~/types/RiskFormVM";
 
 @Component
 export default class RiskIdentificationStep extends Vue {
   @Prop({ required: true })
   identification!: IdentificationVM;
 
+  @Prop({ required: true })
+  processes!: ProcessVM[];
+
+  @Prop({ required: true })
+  entities!: ImpactedEntityVM[];
+
+  filteredEntities: ImpactedEntityVM[] = [];
+
+  mounted() {
+    this.filteredEntities = this.entities;
+  }
   causeIcon(index: number) {
     if (index == this.identification.causes.length - 1) {
       return "plus";
@@ -83,6 +109,23 @@ export default class RiskIdentificationStep extends Vue {
   }
   removeCause(index: number) {
     this.identification.causes.splice(index, 1);
+  }
+
+  getFilteredEntities(text: string) {
+    this.filteredEntities = this.entities.filter((option) => {
+      return (
+        option.name.toString().toLowerCase().indexOf(text.toLowerCase()) >= 0
+      );
+    });
+  }
+
+  get MacroProcess() {
+    return this.processes.find((p) => p.id == this.identification.process)
+      ?.macroProcess.name;
+  }
+  get Domain() {
+    return this.processes.find((p) => p.id == this.identification.process)
+      ?.macroProcess.domain.name;
   }
 }
 </script>

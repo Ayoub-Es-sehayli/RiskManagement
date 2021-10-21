@@ -3,57 +3,57 @@ export type IdentificationVM = {
   riskCause: string
   process: number
   description: string
-  impacts_others: boolean
-  impacted_entities: ImpactedEntityVM[]
+  impactsOthers: boolean
+  impactedEntities: ImpactedEntityVM[]
   causes: CauseVM[]
 }
 export type EvaluationInherentVM = {
   frequency: number
-  impact_raw: number
-  rating_raw: number
-  can_profit: boolean
-  impact_regulatory: boolean
-  impact_legal: boolean
-  impact_image_risk: boolean
-  impact_insatisfaction: boolean
-  impact_credit_risk: boolean
-  impact_market_risk: boolean
-  impact_process_interrupted: boolean
-  impact_other: boolean
+  impactRaw: number
+  ratingRaw: number
+  canProfit: boolean
+  impactRegulatory: boolean
+  impactLegal: boolean
+  impactImageRisk: boolean
+  impactInsatisfaction: boolean
+  impactCreditRisk: boolean
+  impactMarketRisk: boolean
+  impactProcessInterrupted: boolean
+  impactOther: boolean
   comments: {
-    can_profit: string
-    impact_regulatory: string
-    impact_legal: string
-    impact_image_risk: string
-    impact_insatisfaction: string
-    impact_credit_risk: string
-    impact_market_risk: string
-    impact_process_interrupted: string
-    impacts_other: string
+    canProfit: string
+    impactRegulatory: string
+    impactLegal: string
+    impactImageRisk: string
+    impactInsatisfaction: string
+    impactCreditRisk: string
+    impactMarketRisk: string
+    impactProcessInterrupted: string
+    impactOther: string
     [key: string]: string;
   }
 }
 export type EvaluationResiduelVM = {
-  control_levels_efficency: number
-  control_levels_description: string
-  control_auto_efficency: number
-  control_auto_description: string
-  procedure_circular_efficency: number
-  procedure_circular_description: string
-  sensibilisation_formation_efficency: number
-  sensibilisation_formation_description: string
+  controlLevelEfficency: number
+  controlLevelsDescription: string
+  controlAutoEfficency: number
+  controlAutoDescription: string
+  procedureCircularEfficency: number
+  procedureCircularDescription: string
+  sensibilisationFormationEfficency: number
+  sensibilisationFormationDescription: string
 }
 export type EvaluationDispositifVM = {
-  dmr_global: number
-  dmr_typology: number
-  rating_net: number
+  dmrGlobal: number
+  dmrTypology: number
+  ratingNet: number
   comment: string
 }
 type RiskFormVM = {
   identification: IdentificationVM
-  evaluation_inherent: EvaluationInherentVM
-  evaluation_residuel: EvaluationResiduelVM
-  evaluation_dispositif: EvaluationDispositifVM
+  evaluationInherent: EvaluationInherentVM
+  evaluationResiduel: EvaluationResiduelVM
+  evaluationDispositif: EvaluationDispositifVM
 }
 export default RiskFormVM;
 

@@ -15,7 +15,7 @@ export default class RiskModule extends VuexModule {
 
   @Mutation
   SetImpactComment(payload: { impact: string, comment: string }) {
-    this.currentRisk!!.evaluation_inherent.comments[payload.impact] = payload.comment;
+    this.currentRisk!!.evaluationInherent.comments[payload.impact] = payload.comment;
   }
 
   @Action
