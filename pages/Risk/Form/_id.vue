@@ -58,10 +58,21 @@ import RiskModule from "@/store/riskModule";
 import RiskFormVM, { CauseVM, ImpactedEntityVM } from "@/types/RiskFormVM";
 import UiModule from "~/store/uiModule";
 import ProcessVM from "~/types/ProcessVM";
+import getProcesses from "/apollo/query/getProcesses.gql";
+import getEntities from "/apollo/query/getEntities.gql";
+import addRisk from "/apollo/mutation/addRisk.gql";
+import {
+  EDmrTypology,
+  EEfficency,
+  EFrequency,
+  EImpactRating,
+  ERiskRating,
+} from "~/types/types";
 
 @Component
 export default class RiskForm extends Vue {
   riskModule!: RiskModule;
+  uiModule!: UiModule;
   risk: RiskFormVM = {
     identification: {
       riskName: "",
@@ -171,10 +182,121 @@ export default class RiskForm extends Vue {
   }
 
   async nextAction(next: any) {
-    this.storeRisk();
-    next.action();
+    if (next.disabled) {
+      this.$buefy.dialog.confirm({
+        message: "Êtes-vous sure des informations saisis?",
+        title: "Identification Risque",
+        onConfirm: () => {
+          this.saveRisk()
+            .then(() => {
+              this.$buefy.snackbar.open({
+                message: "Le Risque a était sauveguardé avec succèss",
+                type: "is-success",
+              });
+            })
+            .catch((reason) => {
+              console.log(reason);
+              this.$buefy.snackbar.open({
+                message:
+                  "Une erreur s'est produite lors de la sauvegarde du risque",
+                type: "is-danger",
+              });
+            });
+        },
+      });
+    } else {
+      this.storeRisk();
+      next.action();
+    }
   }
-
+  async saveRisk() {
+    let input: any = {
+      identification: {
+        riskName: this.risk.identification.riskName,
+        riskCause: this.risk.identification.riskCause,
+        process: this.risk.identification.process,
+        description: this.risk.identification.description,
+        impactsOthers: this.risk.identification.impactsOthers,
+        impactedEntities: this.risk.identification.impactedEntities,
+        causes: this.risk.identification.causes.map(
+          (value: CauseVM) => value.cause
+        ),
+      },
+      evaluationInherent: {
+        frequency: this.frequencyValues[this.risk.evaluationInherent.frequency],
+        impactRaw: this.impactValues[this.risk.evaluationInherent.impactRaw],
+        ratingRaw: this.ratingValues[this.risk.evaluationInherent.ratingRaw],
+        canProfit: this.risk.evaluationInherent.canProfit,
+        impactRegulatory: this.risk.evaluationInherent.impactRegulatory,
+        impactLegal: this.risk.evaluationInherent.impactLegal,
+        impactImageRisk: this.risk.evaluationInherent.impactImageRisk,
+        impactInsatisfaction: this.risk.evaluationInherent.impactInsatisfaction,
+        impactCreditRisk: this.risk.evaluationInherent.impactCreditRisk,
+        impactMarketRisk: this.risk.evaluationInherent.impactMarketRisk,
+        impactProcessInterrupted:
+          this.risk.evaluationInherent.impactProcessInterrupted,
+        impactOther: this.risk.evaluationInherent.impactOther,
+        comments: {
+          canProfit: this.risk.evaluationInherent.comments.canProfit,
+          impactRegulatory:
+            this.risk.evaluationInherent.comments.impactRegulatory,
+          impactLegal: this.risk.evaluationInherent.comments.impactLegal,
+          impactImageRisk:
+            this.risk.evaluationInherent.comments.impactImageRisk,
+          impactInsatisfaction:
+            this.risk.evaluationInherent.comments.impactInsatisfaction,
+          impactCreditRisk:
+            this.risk.evaluationInherent.comments.impactCreditRisk,
+          impactMarketRisk:
+            this.risk.evaluationInherent.comments.impactMarketRisk,
+          impactProcessInterrupted:
+            this.risk.evaluationInherent.comments.impactProcessInterrupted,
+          impactOther: this.risk.evaluationInherent.comments.impactOther,
+        },
+      },
+      evaluationResiduel: {
+        controlLevelEfficency:
+          this.efficencyValues[
+            this.risk.evaluationResiduel.controlLevelEfficency
+          ],
+        controlLevelsDescription:
+          this.risk.evaluationResiduel.controlLevelsDescription,
+        controlAutoEfficency:
+          this.efficencyValues[
+            this.risk.evaluationResiduel.controlAutoEfficency
+          ],
+        controlAutoDescription:
+          this.risk.evaluationResiduel.controlAutoDescription,
+        procedureCircularEfficency:
+          this.efficencyValues[
+            this.risk.evaluationResiduel.procedureCircularEfficency
+          ],
+        procedureCircularDescription:
+          this.risk.evaluationResiduel.procedureCircularDescription,
+        sensibilisationFormationEfficency:
+          this.efficencyValues[
+            this.risk.evaluationResiduel.sensibilisationFormationEfficency
+          ],
+        sensibilisationFormationDescription:
+          this.risk.evaluationResiduel.sensibilisationFormationDescription,
+      },
+      evaluationDispositif: {
+        dmrGlobal:
+          this.efficencyValues[this.risk.evaluationDispositif.dmrGlobal],
+        dmrTypology:
+          this.dmrTypologyValues[this.risk.evaluationDispositif.dmrTypology],
+        ratingNet: this.ratingValues[this.risk.evaluationDispositif.ratingNet],
+        comment: this.risk.evaluationDispositif.comment,
+      },
+    };
+    const response = await this.$apollo.mutate({
+      mutation: addRisk,
+      variables: {
+        risk: input,
+      },
+    });
+    console.log(response);
+  }
   previousAction(previous: any) {
     this.storeRisk();
     previous.action();

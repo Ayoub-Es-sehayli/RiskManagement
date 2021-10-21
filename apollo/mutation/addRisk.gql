@@ -1,0 +1,5 @@
+mutation AddRisk($risk: RiskFormDtoInput!){
+  addRisk( input: $risk ) {
+    id
+  }
+}
