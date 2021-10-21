@@ -167,18 +167,26 @@ export default class RiskForm extends Vue {
   async beforeCreate() {
     this.uiModule = getModule(UiModule, store);
     this.riskModule = getModule(RiskModule, store);
+    try {
+      let response = await this.$apollo.query({
+        query: getProcesses,
+      });
 
-    let response = await this.$apollo.query({
-      query: getProcesses,
-    });
+      this.processes = response.data.process;
 
-    this.processes = response.data.process;
+      response = await this.$apollo.query({
+        query: getEntities,
+      });
 
-    response = await this.$apollo.query({
-      query: getEntities,
-    });
-
-    this.entities = response.data.entity;
+      this.entities = response.data.entity;
+    } catch (error: any) {
+      this.$buefy.snackbar.open({
+        message: "Un erreur lors de connection au serveur",
+        type: "is-danger",
+      });
+      console.log(error.message);
+      // this.$router.back();
+    }
   }
   mounted() {
     this.uiModule.ChangeTitle(
