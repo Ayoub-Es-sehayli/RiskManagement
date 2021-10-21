@@ -180,7 +180,11 @@ export default class RiskForm extends Vue {
 
     this.entities = response.data.entity;
   }
-
+  mounted() {
+    this.uiModule.ChangeTitle(
+      "Formulatire d’Identification des Risques Opérationnels"
+    );
+  }
   async nextAction(next: any) {
     if (next.disabled) {
       this.$buefy.dialog.confirm({

@@ -8,7 +8,7 @@ import getProcesses from "../apollo/query/getProcesses.gql"
   stateFactory: true
 })
 export default class UiModule extends VuexModule {
-  pageTitle!: string
+  pageTitle: string = "Gestion des Risques"
 
   @Mutation
   SetTitle(title: string) {

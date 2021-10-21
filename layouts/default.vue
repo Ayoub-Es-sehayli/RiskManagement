@@ -4,7 +4,7 @@
       ><img src="~/assets/logo.png" alt="LOGO"
     /></nuxt-link>
     <div class="title">
-      Formulatire d’Identification des Risques Opérationnels
+      {{ title }}
     </div>
     <div class="nav"></div>
     <div class="content">
@@ -17,9 +17,20 @@
 import { Component, Vue } from "vue-property-decorator";
 import { getModule } from "vuex-module-decorators";
 import { store } from "@/store/index";
+import UiModule from "@/store/uiModule";
 
 @Component
-export default class Default extends Vue {}
+export default class Default extends Vue {
+  uiModule!: UiModule;
+
+  created() {
+    this.uiModule = getModule(UiModule, store);
+  }
+
+  get title() {
+    return this.uiModule.pageTitle;
+  }
+}
 </script>
 
 <style scoped>
