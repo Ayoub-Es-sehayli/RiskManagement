@@ -106,6 +106,9 @@ export default class ActorForm extends Vue {
     try {
       const response = await this.$apollo.mutate({
         mutation: addActivity,
+        variables: {
+          activity: this.activity
+        }
       });
       this.$buefy.snackbar.open({
         message: "L'Activité a était sauveguardé avec succès",
