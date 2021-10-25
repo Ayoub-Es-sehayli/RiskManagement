@@ -45,6 +45,7 @@ import { store } from "@/store/index";
 import UiModule from "@/store/uiModule";
 import ProcessVM from "@/types/ProcessVM";
 import getProcesses from "/apollo/query/getProcesses.gql";
+import addActivity from "/apollo/mutation/addActivity.gql";
 import ActivityVM from "@/types/ActivityVM";
 import ActorVM from "@/types/ActorVM";
 
@@ -104,7 +105,7 @@ export default class ActorForm extends Vue {
   async save() {
     try {
       const response = await this.$apollo.mutate({
-        mutation: getProcesses,
+        mutation: addActivity,
       });
       this.$buefy.snackbar.open({
         message: "L'Activité a était sauveguardé avec succès",

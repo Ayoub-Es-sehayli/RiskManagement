@@ -13,6 +13,17 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type ActivityDtoInput = {
+  activity?: Maybe<Scalars['String']>;
+  actor: Scalars['Int'];
+  process: Scalars['Int'];
+};
+
+export type ActivityPayload = {
+  __typename?: 'ActivityPayload';
+  id: Scalars['Int'];
+};
+
 export type BooleanOperationFilterInput = {
   eq?: Maybe<Scalars['Boolean']>;
   neq?: Maybe<Scalars['Boolean']>;
@@ -495,12 +506,36 @@ export type MacroProcessSortInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addActivity?: Maybe<ActivityPayload>;
   addRisk?: Maybe<RiskPayload>;
+};
+
+
+export type MutationAddActivityArgs = {
+  input?: Maybe<ActivityDtoInput>;
 };
 
 
 export type MutationAddRiskArgs = {
   input?: Maybe<RiskFormDtoInput>;
+};
+
+export type Position = {
+  __typename?: 'Position';
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+};
+
+export type PositionFilterInput = {
+  and?: Maybe<Array<PositionFilterInput>>;
+  id?: Maybe<ComparableInt32OperationFilterInput>;
+  name?: Maybe<StringOperationFilterInput>;
+  or?: Maybe<Array<PositionFilterInput>>;
+};
+
+export type PositionSortInput = {
+  id?: Maybe<SortEnumType>;
+  name?: Maybe<SortEnumType>;
 };
 
 export type Process = {
@@ -530,6 +565,7 @@ export type ProcessSortInput = {
 export type Query = {
   __typename?: 'Query';
   entity?: Maybe<Array<Maybe<Entity>>>;
+  position?: Maybe<Array<Maybe<Position>>>;
   process?: Maybe<Array<Maybe<Process>>>;
   risk?: Maybe<Array<Maybe<Risk>>>;
 };
@@ -538,6 +574,12 @@ export type Query = {
 export type QueryEntityArgs = {
   order?: Maybe<Array<EntitySortInput>>;
   where?: Maybe<EntityFilterInput>;
+};
+
+
+export type QueryPositionArgs = {
+  order?: Maybe<Array<PositionSortInput>>;
+  where?: Maybe<PositionFilterInput>;
 };
 
 
@@ -626,6 +668,13 @@ export type StringOperationFilterInput = {
   startsWith?: Maybe<Scalars['String']>;
 };
 
+export type AddActivityMutationVariables = Exact<{
+  activity: ActivityDtoInput;
+}>;
+
+
+export type AddActivityMutation = { __typename?: 'Mutation', addActivity?: { __typename?: 'ActivityPayload', id: number } | null | undefined };
+
 export type AddRiskMutationVariables = Exact<{
   risk: RiskFormDtoInput;
 }>;
@@ -641,4 +690,9 @@ export type Unnamed_1_Query = { __typename?: 'Query', entity?: Array<{ __typenam
 export type Unnamed_2_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Unnamed_2_Query = { __typename?: 'Query', process?: Array<{ __typename?: 'Process', id: number, name?: string | null | undefined, macroProcess?: { __typename?: 'MacroProcess', name?: string | null | undefined, domain?: { __typename?: 'Domain', name?: string | null | undefined } | null | undefined } | null | undefined } | null | undefined> | null | undefined };
+export type Unnamed_2_Query = { __typename?: 'Query', position?: Array<{ __typename?: 'Position', id: number, name?: string | null | undefined } | null | undefined> | null | undefined };
+
+export type Unnamed_3_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Unnamed_3_Query = { __typename?: 'Query', process?: Array<{ __typename?: 'Process', id: number, name?: string | null | undefined, macroProcess?: { __typename?: 'MacroProcess', name?: string | null | undefined, domain?: { __typename?: 'Domain', name?: string | null | undefined } | null | undefined } | null | undefined } | null | undefined> | null | undefined };
