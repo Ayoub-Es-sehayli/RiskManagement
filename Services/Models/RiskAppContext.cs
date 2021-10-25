@@ -19,5 +19,7 @@ namespace RiskManagement.Models
     public DbSet<EvaluationDispositif> EvaluationsDispositif { get; set; }
     public DbSet<Comments> Comments { get; set; }
     public DbSet<Entity> Entities { get; set; }
+    public DbSet<Position> Positions { get; set; }
+    public DbSet<Activity> Activities { get; set; }
   }
 }

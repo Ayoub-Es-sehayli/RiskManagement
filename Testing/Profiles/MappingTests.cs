@@ -182,5 +182,24 @@ namespace RiskManagement.Tests.Profiles
       Assert.NotNull(result);
     }
 
+    [Fact]
+    public void MapActivity_ReturnsObject()
+    {
+      var config = new MapperConfiguration(cfg =>
+      {
+        cfg.AddProfile<ActivityProfile>();
+      });
+      var map = config.CreateMapper();
+      var dto = new ActivityDto
+      {
+        Activity = "asdfasdf",
+        Actor = 1,
+        Process = 1
+      };
+
+      var result = map.Map<Activity>(dto);
+      Assert.NotNull(result);
+      Assert.NotEmpty(result.Name);
+    }
   }
 }
