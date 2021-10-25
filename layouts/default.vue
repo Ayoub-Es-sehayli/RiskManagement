@@ -6,7 +6,9 @@
     <div class="title">
       {{ title }}
     </div>
-    <div class="nav"></div>
+    <div class="nav">
+      <navigation />
+    </div>
     <div class="content">
       <nuxt />
     </div>
