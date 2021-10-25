@@ -77,7 +77,7 @@ export default class RiskForm extends Vue {
     identification: {
       riskName: "",
       riskCause: "",
-      process: 1,
+      process: -1,
       description: "",
       impactsOthers: false,
       impactedEntities: [],
@@ -202,7 +202,7 @@ export default class RiskForm extends Vue {
           this.saveRisk()
             .then(() => {
               this.$buefy.snackbar.open({
-                message: "Le Risque a était sauveguardé avec succèss",
+                message: "Le Risque a était sauveguardé avec succès",
                 type: "is-success",
               });
             })
