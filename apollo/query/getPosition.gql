@@ -1,0 +1,8 @@
+{
+  position (order: {
+    name: ASC
+  }) {
+    id
+    name
+  }
+}
