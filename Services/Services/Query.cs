@@ -30,5 +30,13 @@ namespace RiskManagement.Services
     {
       return context.Entities;
     }
+
+    [UseDbContext(typeof(RiskAppContext))]
+    [UseFiltering]
+    [UseSorting]
+    public IQueryable<Position> GetPosition([ScopedService] RiskAppContext context)
+    {
+      return context.Positions;
+    }
   }
 }
