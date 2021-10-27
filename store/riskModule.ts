@@ -1,5 +1,5 @@
 import { Module, Mutation, Action, VuexModule } from "vuex-module-decorators";
-import RiskFormVM from "~/types/RiskFormVM";
+import RiskFormVM, { CommentsVM, ICommentsVM } from "~/types/RiskFormVM";
 
 @Module({
   name: 'riskModule',
@@ -15,7 +15,9 @@ export default class RiskModule extends VuexModule {
 
   @Mutation
   SetImpactComment(payload: { impact: string, comment: string }) {
-    this.currentRisk!!.evaluationInherent.comments[payload.impact] = payload.comment;
+    let comments = this.currentRisk!!.evaluationInherent.comments as ICommentsVM;
+    comments[payload.impact] = payload.comment;
+    this.currentRisk!!.evaluationInherent.comments = comments as CommentsVM
   }
 
   @Action
