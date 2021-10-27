@@ -15,15 +15,23 @@
       </b-field>
     </div>
     <div class="dmrTypology">
-      <b-field label="Définir la Typologie DMR">
-        <b-select>
+      <b-field
+        label="Définir la Typologie DMR"
+        :type="touched.dmrTypology ? FieldTypeClass('dmrTypology') : ''"
+        :message="touched.dmrTypology ? FieldMessage('dmrTypology') : ''"
+      >
+        <b-select v-model="evaluation.dmrTypology">
           <option :value="0">DMR à dominance préventive</option>
           <option :value="1">DMR à dominance curative</option>
         </b-select>
       </b-field>
     </div>
     <div class="comments">
-      <b-field label="Commentaire">
+      <b-field
+        label="Commentaire"
+        :type="touched.comment ? FieldTypeClass('comment') : ''"
+        :message="touched.comment ? FieldMessage('comment') : ''"
+      >
         <b-input
           type="textarea"
           maxlength="200"
@@ -38,6 +46,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import { EvaluationDispositifVM } from "~/types/RiskFormVM";
+import { EvaluationDispositifSchema } from "~/types/validators/RiskValidator";
 
 @Component
 export default class RiskEvaluationDispositifStep extends Vue {
@@ -75,7 +84,10 @@ export default class RiskEvaluationDispositifStep extends Vue {
     "is-warning",
     "is-success is-light",
   ];
-
+  touched = {
+    dmrTypology: false,
+    comment: false,
+  };
   get calculateRatingNet() {
     let modifier = 0;
 
@@ -99,6 +111,26 @@ export default class RiskEvaluationDispositifStep extends Vue {
 
   get ratingType() {
     return this.ratingStyles[this.calculateRatingNet];
+  }
+  IsValidAt(field: string) {
+    return EvaluationDispositifSchema.validateSyncAt(field, this.evaluation);
+  }
+  FieldTypeClass(field: string) {
+    try {
+      this.IsValidAt(field);
+      return "";
+    } catch (error: any) {
+      return "is-danger";
+    }
+  }
+
+  FieldMessage(field: string) {
+    try {
+      this.IsValidAt(field);
+      return "";
+    } catch (error: any) {
+      return error.errors.join("\n");
+    }
   }
 }
 </script>

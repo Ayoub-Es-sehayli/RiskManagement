@@ -1,8 +1,8 @@
 export type IdentificationVM = {
   riskName: string
-  riskCause: string
+  riskCause?: string
   process: number
-  description: string
+  description?: string
   impactsOthers: boolean
   impactedEntities: ImpactedEntityVM[]
   causes: CauseVM[]
@@ -20,34 +20,23 @@ export type EvaluationInherentVM = {
   impactMarketRisk: boolean
   impactProcessInterrupted: boolean
   impactOther: boolean
-  comments: {
-    canProfit: string
-    impactRegulatory: string
-    impactLegal: string
-    impactImageRisk: string
-    impactInsatisfaction: string
-    impactCreditRisk: string
-    impactMarketRisk: string
-    impactProcessInterrupted: string
-    impactOther: string
-    [key: string]: string;
-  }
+  comments: CommentsVM
 }
 export type EvaluationResiduelVM = {
   controlLevelEfficency: number
-  controlLevelsDescription: string
+  controlLevelsDescription?: string
   controlAutoEfficency: number
-  controlAutoDescription: string
+  controlAutoDescription?: string
   procedureCircularEfficency: number
-  procedureCircularDescription: string
+  procedureCircularDescription?: string
   sensibilisationFormationEfficency: number
-  sensibilisationFormationDescription: string
+  sensibilisationFormationDescription?: string
 }
 export type EvaluationDispositifVM = {
   dmrGlobal: number
   dmrTypology: number
   ratingNet: number
-  comment: string
+  comment?: string
 }
 type RiskFormVM = {
   identification: IdentificationVM
@@ -64,4 +53,20 @@ export type ImpactedEntityVM = {
 }
 export type CauseVM = {
   cause: string
+}
+
+export interface ICommentsVM {
+  [key: string]: string | undefined;
+}
+
+export type CommentsVM = {
+  canProfit?: string
+  impactRegulatory?: string
+  impactLegal?: string
+  impactImageRisk?: string
+  impactInsatisfaction?: string
+  impactCreditRisk?: string
+  impactMarketRisk?: string
+  impactProcessInterrupted?: string
+  impactOther?: string
 }

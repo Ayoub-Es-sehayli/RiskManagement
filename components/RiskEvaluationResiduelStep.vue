@@ -107,7 +107,16 @@ export default class RiskEvaluationResiduelStep extends Vue {
 
   @Prop()
   dmrGlobal!: number;
-
+  touched = {
+    controlLevelEfficency: false,
+    controlLevelsDescription: false,
+    controlAutoEfficency: false,
+    controlAutoDescription: false,
+    procedureCircularEfficency: false,
+    procedureCircularDescription: false,
+    sensibilisationFormationEfficency: false,
+    sensibilisationFormationDescription: false,
+  };
   get calculateDmrGlobal() {
     const sum =
       this.evaluation.controlLevelEfficency +
