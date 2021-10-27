@@ -68,6 +68,7 @@ import {
   EImpactRating,
   ERiskRating,
 } from "~/types/types";
+import { RiskFormSchema } from "~/types/validators/RiskValidator";
 
 @Component
 export default class RiskForm extends Vue {
@@ -76,9 +77,9 @@ export default class RiskForm extends Vue {
   risk: RiskFormVM = {
     identification: {
       riskName: "",
-      riskCause: "",
+      riskCause: undefined,
       process: -1,
-      description: "",
+      description: undefined,
       impactsOthers: false,
       impactedEntities: [],
       causes: [{ cause: "" }],
@@ -97,32 +98,32 @@ export default class RiskForm extends Vue {
       impactProcessInterrupted: false,
       impactOther: false,
       comments: {
-        canProfit: "",
-        impactRegulatory: "",
-        impactLegal: "",
-        impactImageRisk: "",
-        impactInsatisfaction: "",
-        impactCreditRisk: "",
-        impactMarketRisk: "",
-        impactProcessInterrupted: "",
-        impactOther: "",
+        canProfit: undefined,
+        impactRegulatory: undefined,
+        impactLegal: undefined,
+        impactImageRisk: undefined,
+        impactInsatisfaction: undefined,
+        impactCreditRisk: undefined,
+        impactMarketRisk: undefined,
+        impactProcessInterrupted: undefined,
+        impactOther: undefined,
       },
     },
     evaluationResiduel: {
       controlLevelEfficency: 0,
-      controlLevelsDescription: "",
+      controlLevelsDescription: undefined,
       controlAutoEfficency: 0,
-      controlAutoDescription: "",
+      controlAutoDescription: undefined,
       procedureCircularEfficency: 0,
-      procedureCircularDescription: "",
+      procedureCircularDescription: undefined,
       sensibilisationFormationEfficency: 0,
-      sensibilisationFormationDescription: "",
+      sensibilisationFormationDescription: undefined,
     },
     evaluationDispositif: {
       dmrGlobal: 0,
       dmrTypology: 0,
       ratingNet: 1,
-      comment: "",
+      comment: undefined,
     },
   };
   processes: ProcessVM[] = [];
@@ -194,6 +195,32 @@ export default class RiskForm extends Vue {
     );
   }
   async nextAction(next: any) {
+    let field = "identification";
+    switch (this.currentStep) {
+      case 1:
+        field = "evaluationInherent";
+        break;
+      case 2:
+        field = "evaluationResiduel";
+        break;
+      case 3:
+        field = "evaluationDispositif";
+        break;
+    }
+    try {
+      this.IsValidAt(field);
+    } catch (error: any) {
+      this.$buefy.dialog.alert({
+        message:
+          "Veuillez vous assurer qu'il n'y a pas d'erreurs dans les valeurs saisies",
+        title: "Validation du Formulaire",
+        type: "is-danger",
+        icon: "danger",
+      });
+      console.log(error.errors);
+
+      return;
+    }
     if (next.disabled) {
       this.$buefy.dialog.confirm({
         message: "Êtes-vous sure des informations saisis?",
@@ -322,6 +349,11 @@ export default class RiskForm extends Vue {
     this.riskModule.CommentOn(payload);
     this.risk.evaluationInherent.comments =
       this.riskModule.currentRisk!!.evaluationInherent.comments;
+  }
+  IsValidAt(field: string) {
+    return RiskFormSchema.validateSyncAt(field, this.risk, {
+      abortEarly: false,
+    });
   }
 }
 </script>

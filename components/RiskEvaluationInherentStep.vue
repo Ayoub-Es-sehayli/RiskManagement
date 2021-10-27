@@ -1,6 +1,11 @@
 <template>
   <div class="form">
-    <b-field class="frequency" label="Fréquence">
+    <b-field
+      class="frequency"
+      label="Fréquence"
+      :type="touched.frequency ? FieldTypeClass('frequency') : ''"
+      :message="touched.frequency ? FieldMessage('frequency') : ''"
+    >
       <b-select
         v-model="evaluation.frequency"
         placeholder="A quelle fréquence le risque peut-il se produire?"
@@ -21,7 +26,12 @@
         </option>
       </b-select>
     </b-field>
-    <b-field class="impactRaw" label="Impact Brut">
+    <b-field
+      class="impactRaw"
+      label="Impact Brut"
+      :type="touched.impactRaw ? FieldTypeClass('impactRaw') : ''"
+      :message="touched.impactRaw ? FieldMessage('impactRaw') : ''"
+    >
       <b-select
         v-model="evaluation.impactRaw"
         placeholder="Quel niveau d'impact ce risque peut-il avoir?"
@@ -34,7 +44,12 @@
         <option :value="5">Sévère</option>
       </b-select>
     </b-field>
-    <b-field class="ratingRaw" label="Cotations du risque brut">
+    <b-field
+      class="ratingRaw"
+      label="Cotations du risque brut"
+      :type="touched.ratingRaw ? FieldTypeClass('ratingRaw') : ''"
+      :message="touched.ratingRaw ? FieldMessage('ratingRaw') : ''"
+    >
       <b-button expanded :type="ratingType" size="is-medium">{{
         ratingText
       }}</b-button>
@@ -163,8 +178,8 @@
           Commenter
         </b-button>
       </b-field>
-      <b-field class="impactOther" grouped label="Autre"
-        ><b-select v-model="evaluation.impactOther">
+      <b-field class="impactOther" grouped label="Autre">
+        <b-select v-model="evaluation.impactOther">
           <option :value="true">Oui</option>
           <option :value="false">Non</option>
         </b-select>
@@ -201,8 +216,8 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { EvaluationInherentVM } from "@/types/RiskFormVM";
-import { EFrequency, EImpactRating } from "~/types/types";
+import { EvaluationInherentVM, ICommentsVM } from "@/types/RiskFormVM";
+import { EvaluationInherentSchema } from "~/types/validators/RiskValidator";
 
 @Component
 export default class RiskEvaluationInherentStep extends Vue {
@@ -234,10 +249,15 @@ export default class RiskEvaluationInherentStep extends Vue {
     "is-grey",
   ];
   selectedImpact: string = "";
-
+  touched = {
+    frequency: false,
+    impactRaw: false,
+    ratingRaw: false,
+  };
   commentOnImpact(impact: string) {
     this.selectedImpact = impact;
-    this.newComment = this.evaluation.comments[impact];
+    const comments = this.evaluation.comments as ICommentsVM;
+    this.newComment = comments[impact]!!;
     this.modalVisible = true;
   }
   storeComment(payload: { impact: string; comment: string }) {
@@ -255,6 +275,26 @@ export default class RiskEvaluationInherentStep extends Vue {
 
   get ratingType() {
     return this.ratingStyles[this.calculatedRating];
+  }
+  IsValidAt(field: string) {
+    return EvaluationInherentSchema.validateSyncAt(field, this.evaluation);
+  }
+  FieldTypeClass(field: string) {
+    try {
+      this.IsValidAt(field);
+      return "";
+    } catch (error: any) {
+      return "is-danger";
+    }
+  }
+
+  FieldMessage(field: string) {
+    try {
+      this.IsValidAt(field);
+      return "";
+    } catch (error: any) {
+      return error.errors.join("\n");
+    }
   }
 }
 </script>

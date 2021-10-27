@@ -1,13 +1,40 @@
 <template>
   <div class="form">
-    <b-field label="Risque de" class="risk-name">
-      <b-input v-model="identification.riskName" />
+    <b-field
+      label="Risque de"
+      class="risk-name"
+      :type="touched.riskName ? FieldTypeClass('riskName') : ''"
+      :message="touched.riskName ? FieldMessage('riskName') : ''"
+    >
+      <b-input
+        v-model="identification.riskName"
+        @blur="touched.riskName = true"
+        maxlength="50"
+      />
     </b-field>
-    <b-field label="Suite à" class="risk-cause">
-      <b-input v-model="identification.riskCause" />
+    <b-field
+      label="Suite à"
+      class="risk-cause"
+      :type="touched.riskCause ? FieldTypeClass('riskCause') : ''"
+      :message="touched.riskCause ? FieldMessage('riskCause') : ''"
+    >
+      <b-input
+        v-model="identification.riskCause"
+        @blur="touched.riskCause = true"
+        maxlength="50"
+      />
     </b-field>
-    <b-field label="Processus" class="process">
-      <b-select v-model="identification.process" expanded>
+    <b-field
+      label="Processus"
+      class="process"
+      :type="touched.process ? FieldTypeClass('process') : ''"
+      :message="touched.process ? FieldMessage('process') : ''"
+    >
+      <b-select
+        v-model="identification.process"
+        expanded
+        @blur="touched.process = true"
+      >
         <option
           v-for="process in processes"
           :key="process.id"
@@ -29,7 +56,16 @@
           Impacts sur d'autre entité
         </b-switch>
       </b-field>
-      <b-field class="entities" v-if="identification.impactsOthers">
+      <b-field
+        class="entities"
+        v-if="identification.impactsOthers"
+        :type="
+          touched.impactedEntities ? FieldTypeClass('impactedEntities') : ''
+        "
+        :message="
+          touched.impactedEntities ? FieldMessage('impactedEntities') : ''
+        "
+      >
         <b-taginput
           :data="filteredEntities"
           v-model="identification.impactedEntities"
@@ -40,29 +76,41 @@
           field="name"
           icon="label"
           @typing="getFilteredEntities"
+          @blur="touched.impactedEntities = true"
         />
       </b-field>
     </div>
-    <div class="causes">
-      <b-field label="Causes">
-        <b-field
-          grouped
-          v-for="(cause, index) in identification.causes"
-          :key="index"
-        >
-          <b-input expanded v-model="cause.cause" maxlength="100" />
-          <b-button
-            :icon-left="causeIcon(index)"
-            @click="causeAction(index)"
-          ></b-button>
-        </b-field>
+    <b-field class="causes" label="Causes">
+      <b-field
+        grouped
+        v-for="(cause, index) in identification.causes"
+        :key="index"
+        :type="touched.causes[index] ? FieldTypeClass(`causes[${index}]`) : ''"
+        :message="touched.causes[index] ? FieldMessage(`causes[${index}]`) : ''"
+      >
+        <b-input
+          expanded
+          v-model="cause.cause"
+          maxlength="100"
+          @blur="touched.causes[index] = true"
+        />
+        <b-button
+          :icon-left="causeIcon(index)"
+          @click="causeAction(index)"
+        ></b-button>
       </b-field>
-    </div>
-    <b-field label="Description" class="description">
+    </b-field>
+    <b-field
+      label="Description"
+      class="description"
+      :type="touched.description ? FieldTypeClass('description') : ''"
+      :message="touched.description ? FieldMessage('description') : ''"
+    >
       <b-input
         v-model="identification.description"
         type="textarea"
-        maxlength="500"
+        @blur="touched.description = true"
+        maxlength="200"
       />
     </b-field>
   </div>
@@ -71,6 +119,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 import ProcessVM from "~/types/ProcessVM";
 import { IdentificationVM, ImpactedEntityVM } from "~/types/RiskFormVM";
+import { IdentificationSchema } from "~/types/validators/RiskValidator";
 
 @Component
 export default class RiskIdentificationStep extends Vue {
@@ -84,7 +133,15 @@ export default class RiskIdentificationStep extends Vue {
   entities!: ImpactedEntityVM[];
 
   filteredEntities: ImpactedEntityVM[] = [];
-
+  touched = {
+    riskName: false,
+    riskCause: false,
+    process: false,
+    description: false,
+    impactsOthers: false,
+    impactedEntities: false,
+    causes: [false],
+  };
   mounted() {
     this.filteredEntities = this.entities;
   }
@@ -106,9 +163,11 @@ export default class RiskIdentificationStep extends Vue {
     this.identification.causes.push({
       cause: "",
     });
+    this.touched.causes.push(false);
   }
   removeCause(index: number) {
     this.identification.causes.splice(index, 1);
+    this.touched.causes.splice(index, 1);
   }
 
   getFilteredEntities(text: string) {
@@ -127,13 +186,33 @@ export default class RiskIdentificationStep extends Vue {
     return this.processes.find((p) => p.id == this.identification.process)
       ?.macroProcess.domain.name;
   }
+  IsValidAt(field: string) {
+    return IdentificationSchema.validateSyncAt(field, this.identification);
+  }
+  FieldTypeClass(field: string) {
+    try {
+      this.IsValidAt(field);
+      return "";
+    } catch (error: any) {
+      return "is-danger";
+    }
+  }
+
+  FieldMessage(field: string) {
+    try {
+      this.IsValidAt(field);
+      return "";
+    } catch (error: any) {
+      return error.errors.join("\n");
+    }
+  }
 }
 </script>
 <style scoped>
 .form {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: repeat(5, 80px) 1fr;
+  grid-template-rows: repeat(5, 85px) 1fr;
   grid-auto-rows: 1fr;
   gap: 1% 5%;
   grid-auto-flow: row;
