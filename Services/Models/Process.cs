@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace RiskManagement.Models
 {
   public class Process
@@ -6,5 +8,6 @@ namespace RiskManagement.Models
     public string Name { get; set; }
     public MacroProcess MacroProcess { get; set; }
     public int MacroProcessId { get; set; }
+    public IQueryable<Activity> Activities { get; set; }
   }
 }
