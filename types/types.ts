@@ -13,15 +13,45 @@ export type Scalars = {
   DateTime: any;
 };
 
+export type Activity = {
+  __typename?: 'Activity';
+  actor?: Maybe<Position>;
+  actorId: Scalars['Int'];
+  id: Scalars['Int'];
+  name?: Maybe<Scalars['String']>;
+  process?: Maybe<Process>;
+  processId: Scalars['Int'];
+};
+
 export type ActivityDtoInput = {
   activity?: Maybe<Scalars['String']>;
   actor: Scalars['Int'];
   process: Scalars['Int'];
 };
 
+export type ActivityFilterInput = {
+  actor?: Maybe<PositionFilterInput>;
+  actorId?: Maybe<ComparableInt32OperationFilterInput>;
+  and?: Maybe<Array<ActivityFilterInput>>;
+  id?: Maybe<ComparableInt32OperationFilterInput>;
+  name?: Maybe<StringOperationFilterInput>;
+  or?: Maybe<Array<ActivityFilterInput>>;
+  process?: Maybe<ProcessFilterInput>;
+  processId?: Maybe<ComparableInt32OperationFilterInput>;
+};
+
 export type ActivityPayload = {
   __typename?: 'ActivityPayload';
   id: Scalars['Int'];
+};
+
+export type ActivitySortInput = {
+  actor?: Maybe<PositionSortInput>;
+  actorId?: Maybe<SortEnumType>;
+  id?: Maybe<SortEnumType>;
+  name?: Maybe<SortEnumType>;
+  process?: Maybe<ProcessSortInput>;
+  processId?: Maybe<SortEnumType>;
 };
 
 export type BooleanOperationFilterInput = {
@@ -124,6 +154,11 @@ export type Domain = {
   id: Scalars['Int'];
   macroProcesses?: Maybe<Array<Maybe<MacroProcess>>>;
   name?: Maybe<Scalars['String']>;
+};
+
+
+export type DomainMacroProcessesArgs = {
+  order?: Maybe<Array<MacroProcessSortInput>>;
 };
 
 export type DomainFilterInput = {
@@ -450,6 +485,13 @@ export type ImpactedEntityDtoInput = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type ListFilterInputTypeOfActivityFilterInput = {
+  all?: Maybe<ActivityFilterInput>;
+  any?: Maybe<Scalars['Boolean']>;
+  none?: Maybe<ActivityFilterInput>;
+  some?: Maybe<ActivityFilterInput>;
+};
+
 export type ListFilterInputTypeOfEntityFilterInput = {
   all?: Maybe<EntityFilterInput>;
   any?: Maybe<Scalars['Boolean']>;
@@ -485,6 +527,11 @@ export type MacroProcess = {
   id: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
   processes?: Maybe<Array<Maybe<Process>>>;
+};
+
+
+export type MacroProcessProcessesArgs = {
+  order?: Maybe<Array<ProcessSortInput>>;
 };
 
 export type MacroProcessFilterInput = {
@@ -540,13 +587,20 @@ export type PositionSortInput = {
 
 export type Process = {
   __typename?: 'Process';
+  activities?: Maybe<Array<Maybe<Activity>>>;
   id: Scalars['Int'];
   macroProcess?: Maybe<MacroProcess>;
   macroProcessId: Scalars['Int'];
   name?: Maybe<Scalars['String']>;
 };
 
+
+export type ProcessActivitiesArgs = {
+  order?: Maybe<Array<ActivitySortInput>>;
+};
+
 export type ProcessFilterInput = {
+  activities?: Maybe<ListFilterInputTypeOfActivityFilterInput>;
   and?: Maybe<Array<ProcessFilterInput>>;
   id?: Maybe<ComparableInt32OperationFilterInput>;
   macroProcess?: Maybe<MacroProcessFilterInput>;
@@ -564,10 +618,17 @@ export type ProcessSortInput = {
 
 export type Query = {
   __typename?: 'Query';
+  domain?: Maybe<Array<Maybe<Domain>>>;
   entity?: Maybe<Array<Maybe<Entity>>>;
   position?: Maybe<Array<Maybe<Position>>>;
   process?: Maybe<Array<Maybe<Process>>>;
   risk?: Maybe<Array<Maybe<Risk>>>;
+};
+
+
+export type QueryDomainArgs = {
+  order?: Maybe<Array<DomainSortInput>>;
+  where?: Maybe<DomainFilterInput>;
 };
 
 
@@ -685,14 +746,19 @@ export type AddRiskMutation = { __typename?: 'Mutation', addRisk?: { __typename?
 export type Unnamed_1_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Unnamed_1_Query = { __typename?: 'Query', entity?: Array<{ __typename?: 'Entity', id: number, name?: string | null | undefined } | null | undefined> | null | undefined };
+export type Unnamed_1_Query = { __typename?: 'Query', domain?: Array<{ __typename?: 'Domain', id: number, name?: string | null | undefined, macroProcesses?: Array<{ __typename?: 'MacroProcess', id: number, name?: string | null | undefined, processes?: Array<{ __typename?: 'Process', id: number, name?: string | null | undefined, activities?: Array<{ __typename?: 'Activity', id: number, name?: string | null | undefined } | null | undefined> | null | undefined } | null | undefined> | null | undefined } | null | undefined> | null | undefined } | null | undefined> | null | undefined };
 
 export type Unnamed_2_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Unnamed_2_Query = { __typename?: 'Query', position?: Array<{ __typename?: 'Position', id: number, name?: string | null | undefined } | null | undefined> | null | undefined };
+export type Unnamed_2_Query = { __typename?: 'Query', entity?: Array<{ __typename?: 'Entity', id: number, name?: string | null | undefined } | null | undefined> | null | undefined };
 
 export type Unnamed_3_QueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type Unnamed_3_Query = { __typename?: 'Query', process?: Array<{ __typename?: 'Process', id: number, name?: string | null | undefined, macroProcess?: { __typename?: 'MacroProcess', name?: string | null | undefined, domain?: { __typename?: 'Domain', name?: string | null | undefined } | null | undefined } | null | undefined } | null | undefined> | null | undefined };
+export type Unnamed_3_Query = { __typename?: 'Query', position?: Array<{ __typename?: 'Position', id: number, name?: string | null | undefined } | null | undefined> | null | undefined };
+
+export type Unnamed_4_QueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type Unnamed_4_Query = { __typename?: 'Query', process?: Array<{ __typename?: 'Process', id: number, name?: string | null | undefined, macroProcess?: { __typename?: 'MacroProcess', name?: string | null | undefined, domain?: { __typename?: 'Domain', name?: string | null | undefined } | null | undefined } | null | undefined } | null | undefined> | null | undefined };

@@ -17,6 +17,15 @@ declare module '*/addRisk.gql' {
 }
     
 
+declare module '*/getDomains.gql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/getEntities.gql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

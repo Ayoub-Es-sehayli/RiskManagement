@@ -1,0 +1,24 @@
+{
+  domain {
+    id
+    name
+    macroProcesses (order: {
+      name: ASC
+    }) {
+      id
+      name 
+      processes(order: {
+      name: ASC
+    }) {
+        id
+        name
+        activities(order: {
+      name: ASC
+    }) {
+          id
+          name
+        }
+      }
+    }
+  }
+}
