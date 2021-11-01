@@ -54,6 +54,7 @@
       :total="filteredActivities.length"
       :debounce-search="1000"
       :data="FilteredActivities"
+      :loading="isLoading"
     >
       <b-table-column field="name" label="Activité" searchable>
         <template #searchable="{ column, filters }">
@@ -77,6 +78,7 @@ import { Component, Vue } from "vue-property-decorator";
 import { getModule } from "vuex-module-decorators";
 import { store } from "@/store/index";
 import UiModule from "@/store/uiModule";
+import getDomains from "/apollo/query/getDomains.gql";
 import {
   ActivityListVM,
   DomainListVM,
@@ -92,8 +94,30 @@ export default class ProcessMap extends Vue {
   selectedDomain: number = -1;
   selectedMacroProcess: number = -1;
   selectedProcess: number = -1;
+  isLoading: boolean = false;
   async beforeCreate() {
     this.uiModule = getModule(UiModule, store);
+    try {
+      this.isLoading = true;
+      let response = await this.$apollo.query({
+        query: getDomains,
+      });
+
+      this.domains = response.data.domain;
+      this.filterActivities(
+        () => true,
+        () => true,
+        () => true
+      );
+      this.isLoading = false;
+    } catch (error: any) {
+      this.$buefy.snackbar.open({
+        message: "Un erreur lors de connection au serveur",
+        type: "is-danger",
+      });
+      console.log(error.message);
+      // this.$router.back();
+    }
   }
   mounted() {
     this.uiModule.ChangeTitle("Cartographie des Processus");
