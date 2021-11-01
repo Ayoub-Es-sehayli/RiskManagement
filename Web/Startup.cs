@@ -17,6 +17,7 @@ using GraphQL.Server.Ui.Voyager;
 using RiskManagement.Services.MacroProcesses;
 using RiskManagement.Services.Processes;
 using RiskManagement.Services.Risks;
+using RiskManagement.Services.Domains;
 
 namespace RiskManagement.Api
 {
@@ -57,6 +58,7 @@ namespace RiskManagement.Api
         .AddType<RiskType>()
         .AddType<ProcessType>()
         .AddType<MacroProcessType>()
+        .AddType<DomainType>()
         .AddFiltering()
         .AddSorting()
         .ModifyRequestOptions(opt => opt.IncludeExceptionDetails = _env.IsDevelopment());

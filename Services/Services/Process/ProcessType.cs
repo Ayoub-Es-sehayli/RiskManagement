@@ -13,12 +13,20 @@ namespace RiskManagement.Services.Processes
       descriptor.Field(d => d.MacroProcess)
         .ResolveWith<Resolvers>(r => r.GetMacroProcess(default!, default!))
         .UseDbContext<RiskAppContext>();
+      descriptor.Field(p => p.Activities)
+        .ResolveWith<Resolvers>(r => r.GetActivities(default!, default!))
+        .UseDbContext<RiskAppContext>()
+        .UseSorting();
     }
     private class Resolvers
     {
       public MacroProcess GetMacroProcess([Parent] Process process, [ScopedService] RiskAppContext context)
       {
         return context.MacroProcess.FirstOrDefault(m => m.Id == process.MacroProcessId);
+      }
+      public IQueryable<Activity> GetActivities([Parent] Process process, [ScopedService] RiskAppContext context)
+      {
+        return context.Activities.Where(a => a.ProcessId == process.Id);
       }
     }
   }
