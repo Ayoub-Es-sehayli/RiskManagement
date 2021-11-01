@@ -12,6 +12,9 @@
       to="/actor/form"
       >Identifier Acteurs Risques</b-button
     >
+    <b-button tag="router-link" type="is-success is-light is-link" to="/process"
+      >Cartographie <br />des processus</b-button
+    >
   </div>
 </template>
 
@@ -26,8 +29,8 @@ export default class Navigation extends Vue {}
 .navigation {
   display: grid;
   grid-template-columns: 200px;
-  grid-auto-rows: 1fr;
-  gap: 15% 0px;
+  grid-auto-rows: 40px;
+  gap: 10% 0px;
   grid-auto-flow: row;
   grid-template-areas:
     "."
